@@ -1,0 +1,11 @@
+.room_info{
+  /* text-align: start;
+  align-items: start; */
+  /* margin-left: 20px; */
+  width: 200px;
+  color: white;
+  background: black;
+  padding: 18px;
+  border: 2px solid white;
+  margin: 8px;
+}
