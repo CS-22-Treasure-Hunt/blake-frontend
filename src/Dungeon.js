@@ -10,12 +10,76 @@ class Dungeon extends Component {
     room_info: null,
     cooldown: null,
     grid: [],
-    visited: null
+    visited: null,
+    player_info: null,
   };
 
   componentDidMount = () => {
     this.init_call()
     this.make_grid()
+    this.map_parser()
+    //  this.check_inventory()
+  }
+
+  map_parser = () => {
+    console.log("ok ok")
+  }
+
+  pick_up = () => {
+    const treasure = {name: "treasure"}
+    const token = process.env.REACT_APP_TOKEN;
+    return axios.post(`https://lambda-treasure-hunt.herokuapp.com/api/adv/take/`, treasure, {headers: { Authorization: `Token ${token}`}, 'Content-Type': 'application/json'})
+    .then(res => {
+      console.log("pickup", res)
+      this.setState({
+        room_info: res.data
+      },
+        () => this.timer()
+        );
+      // this.check_inventory()
+    })
+  }
+
+  sell = () => {
+    const treasure = {name: "treasure", confirm: "yes"}
+    const token = process.env.REACT_APP_TOKEN;
+    return axios.post(`https://lambda-treasure-hunt.herokuapp.com/api/adv/sell/`, treasure, {headers: { Authorization: `Token ${token}`}, 'Content-Type': 'application/json'})
+    .then(res => {
+      console.log("sell", res.data)
+      // this.confirm()
+    })
+  }
+
+  pray = () => {
+    axios({
+      method: "post",
+      url: `https://lambda-treasure-hunt.herokuapp.com/api/adv/pray/`,
+      headers: {
+        Authorization: `Token ${process.env.REACT_APP_TOKEN}`
+      }
+    })
+      .then(({data}) => console.log("dat", data))
+      .catch(err => console.log("error", err))
+  }
+
+  // check_status = () => {
+  //   const token = process.env.REACT_APP_TOKEN;
+  //   return axios.post(`https://lambda-treasure-hunt.herokuapp.com/api/adv/status/`,  {headers: { Authorization: `Token ${token}`}, 'Content-Type': 'application/json'})
+  //   .then(res => {
+  //     console.log("status:", res)
+  //   })
+  // }
+
+  check_status = () => {
+    axios({
+      method: "post",
+      url: `https://lambda-treasure-hunt.herokuapp.com/api/adv/status/`,
+      headers: {
+        Authorization: `Token ${process.env.REACT_APP_TOKEN}`
+      }
+    })
+      .then(({data}) => this.setState({player_info: data}))
+      .catch(err => console.log("error", err))
   }
 
   make_grid = () => {
@@ -82,7 +146,6 @@ class Dungeon extends Component {
         exits: res.data.exits,
         title: res.data.title
       }
-      console.log("copy", copy)
 
       let coord_array = [first, second]
       res.data.coordinates = coord_array
@@ -92,7 +155,7 @@ class Dungeon extends Component {
         visited: copy 
       },
         () => this.timer()
-        );
+      );
     })
   } 
 
@@ -158,13 +221,36 @@ class Dungeon extends Component {
           })}</p>
         
         </div>
+
+        <div className="player_info">
+          Player status
+          {/* <p>items: {this.state.player_info && this.state.player_info.items} </p> */}
+          <p>name: {this.state.player_info && this.state.player_info.name} </p>
+          <p>gold: {this.state.player_info && this.state.player_info.gold} </p>
+          <p>has mined (mvp!!): {this.state.player_info && (this.state.player_info.has_mined ? "yes" : "no")} </p>
+          <p>carrying/capacity: {this.state.player_info && `${this.state.player_info.encumbrance}/${this.state.player_info.strength}`} </p>
+          <p>speed: {this.state.player_info && this.state.player_info.speed} </p>
+          <p>footwear: {this.state.player_info && this.state.player_info.footwear} </p>
+          <p>bodywear: {this.state.player_info && this.state.player_info.bodywear} </p>
+
+        </div>
         
         <div className="navigate">
           <div>cooldown: {this.state.cooldown}</div>
-          <button onClick={this.go_north}>n</button>
-          <button onClick={this.go_south}>s</button>
-          <button onClick={this.go_east}>e</button>
+          <div>
+            <button onClick={this.go_north}>n</button>
+          </div>
           <button onClick={this.go_west}>w</button>
+          <button onClick={this.go_east}>e</button>
+          <div>
+            <button onClick={this.go_south}>s</button>
+          </div>
+          <div>
+          <button onClick={this.pick_up}>pick up: {this.state.room_info && this.state.room_info.items.length > 0 ?  "treasure" : "n/a"}</button>
+          <button onClick={this.sell}>sell</button>
+          <button onClick={this.check_status}>status</button>
+          <button onClick={this.pray}>pray at shrine</button>
+          </div>
         </div>
 
         <div className="map">
