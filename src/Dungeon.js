@@ -111,7 +111,7 @@ class Dungeon extends Component {
   }
 
   timer = (duration, display) => {
-    var timeleft = this.state.room_info.cooldown;
+    var timeleft = Math.round(this.state.room_info.cooldown);
     setInterval(() => {
       if(timeleft > 0){
         // console.log(timeleft)
@@ -139,7 +139,7 @@ class Dungeon extends Component {
       const response = res.data;
       this.setState({
         room_info: response,
-        visited: first_room 
+        // visited: first_room 
       },
         () => this.timer()
         );
@@ -147,8 +147,8 @@ class Dungeon extends Component {
   } 
 
   
-  move_call = (direction) => {
-    const move_dir = {direction: direction}
+  move_call = (direction, wise_id) => {
+    const move_dir = {direction: direction, next_room_id: wise_id.toString()}
     const token = process.env.REACT_APP_TOKEN;
     console.log(move_dir)
     return axios.post(`https://lambda-treasure-hunt.herokuapp.com/api/adv/move/`, move_dir, {headers: { Authorization: `Token ${token}`}, 'Content-Type': 'application/json'})
@@ -168,7 +168,7 @@ class Dungeon extends Component {
       const response = res.data;
       this.setState({
         room_info: response,
-        visited: copy 
+        // visited: copy 
       },
         () => this.timer()
       );
@@ -176,20 +176,24 @@ class Dungeon extends Component {
   } 
 
   go_north = () => {
-    // event.preventDefault
-    this.move_call("n")
+    let coord_id = this.state.room_info.coordinates[0].toString()+(this.state.room_info.coordinates[1]+1).toString()
+    let id = this.state.display_rooms[coord_id].id
+    this.move_call("n", id)
   }
   go_south = () => {
-    // event.preventDefault
-    this.move_call("s")
+    let coord_id = this.state.room_info.coordinates[0].toString()+(this.state.room_info.coordinates[1]-1).toString()
+    let id = this.state.display_rooms[coord_id].id
+    this.move_call("s", id)
   }
   go_east = () => {
-    // event.preventDefault
-    this.move_call("e")
+    let coord_id = (this.state.room_info.coordinates[0]+1).toString()+this.state.room_info.coordinates[1].toString()
+    let id = this.state.display_rooms[coord_id].id
+    this.move_call("e", id)
   }
   go_west = () => {
-    // event.preventDefault
-    this.move_call("w")
+    let coord_id = (this.state.room_info.coordinates[0]-1).toString()+this.state.room_info.coordinates[1].toString()
+    let id = this.state.display_rooms[coord_id].id
+    this.move_call("w", id)
   }
 
 
@@ -216,23 +220,23 @@ class Dungeon extends Component {
           })}</p>
           <p>items: {this.state.room_info && this.state.room_info.items.map(e => {
             return(
-              <div>
+              <p>
               <span> {e} </span>
-              </div>
+              </p>
             )
           })}</p>
           <p>messages: {this.state.room_info && this.state.room_info.messages.map(e => {
             return(
-              <div>
+              <p>
               <span> {e} </span>
-              </div>
+              </p>
             )
           })}</p>
           <p>players: {this.state.room_info && this.state.room_info.players.map(e => {
             return(
-              <div>
+              <p>
               <span> {e} </span>
-              </div>
+              </p>
             )
           })}</p>
         

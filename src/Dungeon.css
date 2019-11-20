@@ -26,7 +26,7 @@
 .player_info{
   width: 150px;
   margin-left: 350px;
-  margin-top: 50px;
+  margin-top: 10px;
   background: grey;
   padding: 10px;
   font-size: 14px;
@@ -35,10 +35,10 @@
 }
 .key{
   width: 100px;
-  margin-left: 220px;
-  margin-top: 180px;
+  margin-left: calc(100% - 120px);
+  margin-top: 10px;
   background: grey;
-  padding: 10px;
+  padding: 5px;
   font-size: 12px;
   position: fixed;
   top: 0;
