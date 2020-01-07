@@ -350,6 +350,7 @@ class Dungeon extends Component {
                   ${this.state.display_rooms && this.state.display_rooms[index.toString()+(99-i).toString()] && (this.state.display_rooms[index.toString()+(99-i)].title === "Linh's Shrine" ? "lihn_shrine" : "")}
                   ${this.state.display_rooms && this.state.display_rooms[index.toString()+(99-i).toString()] && (this.state.display_rooms[index.toString()+(99-i)].title === "The Peak of Mt. Holloway" ? "mountain_peak" : "")}
                   ${this.state.display_rooms && this.state.display_rooms[index.toString()+(99-i).toString()] && (this.state.display_rooms[index.toString()+(99-i)].title === "Glasowyn's Grave" ? "glasowyn_grave" : "")}
+                  ${this.state.display_rooms && this.state.display_rooms[index.toString()+(99-i).toString()] && (this.state.display_rooms[index.toString()+(99-i)].id === 156 ? "mine" : "")}
 
 
                   
