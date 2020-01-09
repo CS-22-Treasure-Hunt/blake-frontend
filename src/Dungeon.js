@@ -106,7 +106,7 @@ class Dungeon extends Component {
         grid[i][j] = -1
       }
     }
-    console.log("grid:", grid)
+    // console.log("grid:", grid)
     this.setState({grid: grid})
   }
 
@@ -123,7 +123,6 @@ class Dungeon extends Component {
 
   init_call = () => {
     const token = process.env.REACT_APP_TOKEN;
-    console.log(token)
     axios.get(`https://lambda-treasure-hunt.herokuapp.com/api/adv/init/`, {headers: { Authorization: `Token ${token}`}, 'Content-Type': 'application/json'})
     .then(res => {
       let first = parseInt(res.data.coordinates.split('(').pop().split(',')[0]);
@@ -317,10 +316,10 @@ class Dungeon extends Component {
         <div className="map">
         {this.state.grid.length > 0 && this.state.grid.map((e, i) => {
           return(
-            <div className="row">
+            <div  key={ (99-i).toString()} className="row">
               {e.map((event, index) => {
                 return(
-                  <span className={`room ${this.state.room_info && ((this.state.room_info.coordinates[0] === index && this.state.room_info.coordinates[1] === 99-i) ? "current" : "")}
+                  <span key={index.toString()+(99-i).toString()} className={`room ${this.state.room_info && ((this.state.room_info.coordinates[0] === index && this.state.room_info.coordinates[1] === 99-i) ? "current" : "")}
                   ${this.state.room_info && ((this.state.room_info.coordinates[0] === index && this.state.room_info.coordinates[1] === 99-i && this.state.room_info.exits.includes("n")) ? "north" : "")}
                   ${this.state.room_info && ((this.state.room_info.coordinates[0] === index && this.state.room_info.coordinates[1] === 99-i && this.state.room_info.exits.includes("s")) ? "south" : "")}
                   ${this.state.room_info && ((this.state.room_info.coordinates[0] === index && this.state.room_info.coordinates[1] === 99-i && this.state.room_info.exits.includes("e")) ? "east" : "")}
